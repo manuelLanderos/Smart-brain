@@ -91,7 +91,7 @@ class App extends Component {
     //   ]
     // });
 
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://smart-brain-lkqg.onrender.com/imageurl', {
       method: 'post',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
@@ -102,7 +102,7 @@ class App extends Component {
 
       .then(response => {
         if (response) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://smart-brain-lkqg.onrender.com/image', {
             method: 'put',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
