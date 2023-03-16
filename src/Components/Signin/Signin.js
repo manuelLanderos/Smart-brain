@@ -32,7 +32,7 @@ class SignIn extends React.Component {
           // does the user exist? Did we receive a user with a property of id?
           this.props.loadUser(user);
           this.props.onRouteChange('home');
-        } else { console.log("this user does not exist") }
+        } else { alert("incorrect email and/or password") }
       });
   };
 

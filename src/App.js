@@ -9,6 +9,7 @@ import Rank from './Components/Rank/Rank';
 import ParticlesBg from 'particles-bg';
 import SignIn from './Components/Signin/Signin';
 import Register from './Components/Register/Register';
+import HowTo from "./Components/How To/HowTo";
 
 const initialState = {
   input: '',
@@ -125,12 +126,15 @@ class App extends Component {
       this.setState(initialState);
     } else if (route === 'home') {
       this.setState({ isSignedIn: true });
+    } else {
+      this.setState({ isSignedIn: false });
     }
 
     this.setState({ route: route });
   };
 
   render() {
+
     const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
@@ -155,12 +159,15 @@ class App extends Component {
           </div>
         ) : route === 'signin' ? (
           <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-        ) : (
+        ) : route === "register" ? (
           <Register
             loadUser={this.loadUser}
             onRouteChange={this.onRouteChange}
           />
+        ) : (
+          <HowTo />
         )}
+
       </div>
     );
   }
