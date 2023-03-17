@@ -1,20 +1,23 @@
 body {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 100s ease infinite;
+  height: 100vh;
   margin: 0;
   font-family: "Oxygen", Courier, monospace;
   font-size: 23px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #FFFFFF;
-  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
 
-button {
-  cursor: pointer;
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
