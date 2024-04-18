@@ -92,7 +92,7 @@ class App extends Component {
     //   ]
     // });
 
-    fetch('https://smart-brain-database.onrender.com/imageurl', {
+    fetch('https://smartbrainbackend-1.onrender.com/imageurl', {
       method: 'post',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
@@ -103,7 +103,7 @@ class App extends Component {
 
       .then(response => {
         if (response) {
-          fetch('https://smart-brain-database.onrender.com/image', {
+          fetch('https://smartbrainbackend-1.onrender.com/image', {
             method: 'put',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
