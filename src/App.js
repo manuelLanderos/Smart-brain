@@ -1,7 +1,6 @@
-// this is the new stuff
-import React, { Component } from "react"
-import Navigation from "./Components/Navigation/navigation"
-import FacialRecognition from "./Components/FacialRecognition/FacialRecognition"
+import React, { Component } from "react";
+import Navigation from "./Components/Navigation/navigation";
+import FacialRecognition from "./Components/FacialRecognition/FacialRecognition";
 import './App.css';
 import Logo from './Components/logo/logo';
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
@@ -25,10 +24,14 @@ const initialState = {
     joined: '',
   },
 };
+
 class App extends Component {
   constructor() {
     super();
     this.state = initialState;
+
+    // Bind the calculateFaceLocation method to the class instance
+    this.calculateFaceLocation = this.calculateFaceLocation.bind(this);  // this is the new stuff
   }
 
   loadUser = (data) => {
@@ -43,7 +46,8 @@ class App extends Component {
     });
   };
 
-  calculateFaceLocation = (data) => {
+  // Arrow function to ensure binding of this context
+  calculateFaceLocation = (data) => {  // this is the new stuff
     // Check if the API response is valid
     if (!data || !data.outputs || data.outputs.length === 0) {
       console.error("Invalid response from API:", data);
@@ -82,29 +86,13 @@ class App extends Component {
     };
   };
 
-
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
+
   onButtonSubmit = () => {
     /*This is the functionality of the DETECT button. They are both passed as props to InputForm*/
     this.setState({ imageUrl: this.state.input });
-
-    // const raw = JSON.stringify({
-    //   "user_app_id": {
-    //     "user_id": "manwell",
-    //     "app_id": "my-first-application"
-    //   },
-    //   "inputs": [
-    //     {
-    //       "data": {
-    //         "image": {
-    //           "url": this.state.input,
-    //         }
-    //       }
-    //     }
-    //   ]
-    // });
 
     fetch('https://smartbrainbackend-qaaf.onrender.com/imageurl', {
       method: 'post',
@@ -113,8 +101,6 @@ class App extends Component {
         input: this.state.input,
       }),
     }).then(response => response.json())
-
-
       .then(response => {
         if (response) {
           fetch('https://smartbrainbackend-qaaf.onrender.com/image', {
@@ -126,13 +112,16 @@ class App extends Component {
           })
             .then((response) => response.json())
             .then((count) => {
-              this.setState(Object.assign(this.state.user, { entries: count }))
+              this.setState(Object.assign(this.state.user, { entries: count }));
             }).catch(console.log)
         }
-        this.displayFaceBox(this.calculateFacelocation(response))
-        // console.log(response)
+        this.displayFaceBox(this.calculateFaceLocation(response));  // this is the new stuff
       })
       .catch((err) => console.log(err));
+  };
+
+  displayFaceBox = (box) => {
+    this.setState({ box: box });
   };
 
   onRouteChange = (route) => {
@@ -148,7 +137,6 @@ class App extends Component {
   };
 
   render() {
-
     const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
@@ -158,7 +146,6 @@ class App extends Component {
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
         />
-
 
         {route === 'home' ? (
           <div>
