@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import Navigation from "./Components/Navigation/navigation";
-import FacialRecognition from "./Components/FacialRecognition/FacialRecognition";
+// this is the new stuff
+import React, { Component } from "react"
+import Navigation from "./Components/Navigation/navigation"
+import FacialRecognition from "./Components/FacialRecognition/FacialRecognition"
 import './App.css';
 import Logo from './Components/logo/logo';
 import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm';
@@ -24,14 +25,10 @@ const initialState = {
     joined: '',
   },
 };
-
 class App extends Component {
   constructor() {
     super();
     this.state = initialState;
-
-    // Bind the calculateFaceLocation method to the class instance
-    this.calculateFaceLocation = this.calculateFaceLocation.bind(this);  // this is the new stuff
   }
 
   loadUser = (data) => {
@@ -46,53 +43,54 @@ class App extends Component {
     });
   };
 
-  // Arrow function to ensure binding of this context
-  calculateFaceLocation = (data) => {  // this is the new stuff
-    // Check if the API response is valid
-    if (!data || !data.outputs || data.outputs.length === 0) {
-      console.error("Invalid response from API:", data);
-      return null;
-    }
-
-    // Check if any regions (faces) were detected
-    const regions = data.outputs[0]?.data?.regions;
-    if (!regions || regions.length === 0) {
-      console.warn("No face detected in the image.");
-      return null;
-    }
-
-    // Get the bounding box of the first detected face
-    const clarifaiFace = regions[0]?.region_info?.bounding_box;
-    if (!clarifaiFace) {
-      console.warn("Bounding box not found.");
-      return null;
-    }
-
-    // Get the image element from the DOM
-    const image = document.getElementById('inputimage');
+  calculateFacelocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box
+    // console.log(clarifaiFace)
+    const image = document.getElementById('inputimage')
     if (!image) {
-      console.warn('Image element not found');
+      console.log('Image element not found');
       return null;
     }
+    const width = Number(image.width)
+    const height = Number(image.height)
+    // console.log(width, height)
 
-    const width = Number(image.width);
-    const height = Number(image.height);
 
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
       rightCol: width - clarifaiFace.right_col * width,
       bottomRow: height - clarifaiFace.bottom_row * height
-    };
-  };
+    }
+  }
+
+  displayFaceBox = (box) => {
+    // console.log(box)
+    this.setState({ box: box })
+  }
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
-
   onButtonSubmit = () => {
     /*This is the functionality of the DETECT button. They are both passed as props to InputForm*/
     this.setState({ imageUrl: this.state.input });
+
+    // const raw = JSON.stringify({
+    //   "user_app_id": {
+    //     "user_id": "manwell",
+    //     "app_id": "my-first-application"
+    //   },
+    //   "inputs": [
+    //     {
+    //       "data": {
+    //         "image": {
+    //           "url": this.state.input,
+    //         }
+    //       }
+    //     }
+    //   ]
+    // });
 
     fetch('https://smartbrainbackend-qaaf.onrender.com/imageurl', {
       method: 'post',
@@ -101,6 +99,8 @@ class App extends Component {
         input: this.state.input,
       }),
     }).then(response => response.json())
+
+
       .then(response => {
         if (response) {
           fetch('https://smartbrainbackend-qaaf.onrender.com/image', {
@@ -112,16 +112,13 @@ class App extends Component {
           })
             .then((response) => response.json())
             .then((count) => {
-              this.setState(Object.assign(this.state.user, { entries: count }));
+              this.setState(Object.assign(this.state.user, { entries: count }))
             }).catch(console.log)
         }
-        this.displayFaceBox(this.calculateFaceLocation(response));  // this is the new stuff
+        this.displayFaceBox(this.calculateFacelocation(response))
+        // console.log(response)
       })
       .catch((err) => console.log(err));
-  };
-
-  displayFaceBox = (box) => {
-    this.setState({ box: box });
   };
 
   onRouteChange = (route) => {
@@ -137,6 +134,7 @@ class App extends Component {
   };
 
   render() {
+
     const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
@@ -146,6 +144,7 @@ class App extends Component {
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
         />
+
 
         {route === 'home' ? (
           <div>
