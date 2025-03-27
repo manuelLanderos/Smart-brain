@@ -43,31 +43,45 @@ class App extends Component {
     });
   };
 
-  calculateFacelocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box
-    // console.log(clarifaiFace)
-    const image = document.getElementById('inputimage')
-    if (!image) {
-      console.log('Image element not found');
+  calculateFaceLocation = (data) => {
+    // Check if the API response is valid
+    if (!data || !data.outputs || data.outputs.length === 0) {
+      console.error("Invalid response from API:", data);
       return null;
     }
-    const width = Number(image.width)
-    const height = Number(image.height)
-    // console.log(width, height)
 
+    // Check if any regions (faces) were detected
+    const regions = data.outputs[0]?.data?.regions;
+    if (!regions || regions.length === 0) {
+      console.warn("No face detected in the image.");
+      return null;
+    }
+
+    // Get the bounding box of the first detected face
+    const clarifaiFace = regions[0]?.region_info?.bounding_box;
+    if (!clarifaiFace) {
+      console.warn("Bounding box not found.");
+      return null;
+    }
+
+    // Get the image element from the DOM
+    const image = document.getElementById('inputimage');
+    if (!image) {
+      console.warn('Image element not found');
+      return null;
+    }
+
+    const width = Number(image.width);
+    const height = Number(image.height);
 
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
       rightCol: width - clarifaiFace.right_col * width,
       bottomRow: height - clarifaiFace.bottom_row * height
-    }
-  }
+    };
+  };
 
-  displayFaceBox = (box) => {
-    // console.log(box)
-    this.setState({ box: box })
-  }
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
